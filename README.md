@@ -3,11 +3,12 @@
 
 [![Build Status](https://github.com/niomwungeri-fabrice/oebs/actions/workflows/ci.yml/badge.svg)](https://github.com/niomwungeri-fabrice/oebs/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/java-21-blue)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/niomwungeri-fabrice/oebs)
 ![License](https://img.shields.io/github/license/niomwungeri-fabrice/oebs)
-![Security Status](https://img.shields.io/github/vulnerabilities/niomwungeri-fabrice/oebs)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/niomwungeri-fabrice/oebs)
 ![GitHub Issues](https://img.shields.io/github/issues/niomwungeri-fabrice/oebs)
+
+[//]: # (![GitHub release &#40;latest by date&#41;]&#40;https://img.shields.io/github/v/release/niomwungeri-fabrice/oebs&#41;)
+
 
 OEBS is a demo project demonstrating a basic setup of account creation and token-based authentication using Java Spring Boot. The application uses PostgreSQL as the database and is configured to work both locally and in a Docker environment. Future iterations will expand OEBS to support appointment booking and business offers.
 
