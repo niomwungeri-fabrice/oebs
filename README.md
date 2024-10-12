@@ -1,3 +1,5 @@
+[![Java CI](https://github.com/niomwungeri-fabrice/oebs/actions/workflows/ci.yml/badge.svg)](https://github.com/niomwungeri-fabrice/oebs/actions/workflows/ci.yml)
+
 # OEBS: Over Engineered Booking System Demo
 
 OEBS is a demo project demonstrating a basic setup of account creation and token-based authentication using Java Spring Boot. The application uses PostgreSQL as the database and is configured to work both locally and in a Docker environment. Future iterations will expand OEBS to support appointment booking and business offers.
