@@ -39,6 +39,7 @@ public class Account extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean isPhoneVerified = false;
     private String name;
+    private String otp;
 
 
     @Override

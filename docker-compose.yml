@@ -18,6 +18,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - SHOW_SQL=${SHOW_SQL}
       - TOKEN_EXPIRATION=${TOKEN_EXPIRATION}
+      - SENDGRID_KEY=${SENDGRID_KEY}
+      - SENDGRID_EMAIL_VERIFICATION_TEMPLATE=${SENDGRID_EMAIL_VERIFICATION_TEMPLATE}
     volumes:
       - .:/app  # Mount the project directory to /app in the container
       - /app/target  # Ensure /app/target is writable for rebuilds
