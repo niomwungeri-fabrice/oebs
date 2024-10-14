@@ -1,6 +1,10 @@
 package io.lynx.oebs.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +25,20 @@ public class Account extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID accountId;
     private String username;
+    @JsonIgnore
     private String password;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password should be at least 8 characters")
     private String phoneNumber;
     private String lang;
     @Column(nullable = false)
     private boolean isEmailVerified = false;
     @Column(nullable = false)
     private boolean isPhoneVerified = false;
+    private String name;
 
 
     @Override
@@ -59,7 +69,7 @@ public class Account extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEmailVerified; // Enabled only if email is verified
+        return isEmailVerified || isPhoneVerified; // Enabled only if email is verified
     }
 }
 

@@ -18,7 +18,8 @@ logs:
 restart-app:
 	$(DCOMPOSE) restart app
 
-test:
+pre-test:
+	docker-compose -f docker-compose.test.yml down --remove-orphans
+
+test: pre-test
 	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
-
-

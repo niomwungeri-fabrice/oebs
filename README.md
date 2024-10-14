@@ -9,17 +9,7 @@
 
 [//]: # (![GitHub release &#40;latest by date&#41;]&#40;https://img.shields.io/github/v/release/niomwungeri-fabrice/oebs&#41;)
 
-
-OEBS is a demo project demonstrating a basic setup of account creation and token-based authentication using Java Spring Boot. The application uses PostgreSQL as the database and is configured to work both locally and in a Docker environment. Future iterations will expand OEBS to support appointment booking and business offers.
-
-## Table of Contents
-- [Overview](#overview)
-- [Running Locally](#running-locally)
-    - [With Java 21](#with-java-21)
-    - [With Lower Java Versions](#with-lower-java-versions)
-- [API Documentation](#api-documentation)
-- [Development Setup](#development-setup)
-- [Future Improvements](#future-improvements)
+OEBS Demo Application intended to showcase the production ready set up for spring boot application
 
 ---
 
