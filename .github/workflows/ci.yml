@@ -46,7 +46,7 @@ jobs:
           echo -e "spring.datasource.url=jdbc:postgresql://localhost:5432/test_db\nspring.datasource.username=test_user\nspring.datasource.password=test_password\nspring.jpa.hibernate.ddl-auto=update\nspring.security.disable-csrf=true" > src/test/resources/application-test.properties
       - name: Set Environment Variables
         env:
-          SHOW_SQL: true                # Enable SQL logging if desired
+          SHOW_SQL: 1                # Enable SQL logging if desired
           JWT_SECRET: 'yTiDyInN9Hm2oHRNwAevgDM+WsZROx5310DpcpUFXCo='    # Replace with your actual JWT secret or GitHub secret
           TOKEN_EXPIRATION: 90904283492     # Example: set token expiration to 1 day (in ms)
         run: echo "Environment variables for testing have been set."
