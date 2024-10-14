@@ -34,6 +34,4 @@ build/
 
 ### Localtesting
 docker-compose.test.yml
-src/test/resources/application-test.properties
-
 .env
