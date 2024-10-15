@@ -3,6 +3,7 @@ package io.lynx.oebs.controllers;
 import io.lynx.oebs.dtos.CreateAccountRequest;
 import io.lynx.oebs.dtos.GenericAPIResponse;
 import io.lynx.oebs.dtos.MessageResponse;
+import io.lynx.oebs.dtos.OTPVerificationRequest;
 import io.lynx.oebs.entities.Account;
 import io.lynx.oebs.helpers.Helpers;
 import io.lynx.oebs.services.AccountService;
@@ -35,14 +36,16 @@ public class AccountController {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         Account createdAccount = accountService.createAccount(account);
         log.info("Created account {}", Helpers.toJson(createdAccount));
-        // TODO: send email for user verification
         return new ResponseEntity<Object>(GenericAPIResponse.builder().data(MessageResponse.builder().message("success! email sent for verification, please check your email.").build()).build(), HttpStatus.CREATED);
     }
 
     @PostMapping("/accounts/verify")
-    public ResponseEntity<?> verifyAccount(String email) {
-        // TODO: implement the verification process
-        return new ResponseEntity<Object>(GenericAPIResponse.builder().data(MessageResponse.builder().message("success! account has been verified success, head to the app to continue.").build()).build(), HttpStatus.CREATED);
+    public ResponseEntity<?> verifyAccount(@RequestBody OTPVerificationRequest otpVerificationRequest) {
+        if (accountService.verifyAccount( otpVerificationRequest.getOtp(), otpVerificationRequest.getEmail())) {
+            return new ResponseEntity<Object>(GenericAPIResponse.builder().data(MessageResponse.builder().message("success! account has been verified success, head to the app to continue.").build()).build(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Object>(GenericAPIResponse.builder().data(MessageResponse.builder().message("failed! otp has expired or does not match.").build()).build(), HttpStatus.UNAUTHORIZED);
+        }
     }
 
 }

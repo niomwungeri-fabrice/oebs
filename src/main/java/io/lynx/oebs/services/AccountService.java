@@ -3,6 +3,7 @@ package io.lynx.oebs.services;
 import io.lynx.oebs.dtos.CreateAccountRequest;
 import io.lynx.oebs.entities.Account;
 import io.lynx.oebs.exceptions.ResourceConflictException;
+import io.lynx.oebs.exceptions.ResourceNotFoundException;
 import io.lynx.oebs.repositories.AccountRepository;
 import io.lynx.oebs.services.mail.EmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class AccountService {
                 .password(createAccountRequest.getPassword())
                 .phoneNumber(createAccountRequest.getPhoneNumber())
                 .lang(createAccountRequest.getLang())
+                .otp(otp)
                 .build();
         if (accountRepository.existsByEmail(account.getEmail())) {
             throw new ResourceConflictException("email is already in use.");
@@ -52,6 +54,19 @@ public class AccountService {
                 model
         );
         return savedAccount;
+    }
+
+    public boolean verifyAccount(String otp, String email) {
+        Account account = accountRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+
+        if (account.getOtp().equals(otp)) {
+            account.setEmailVerified(true);
+            accountRepository.save(account);
+            return true;
+
+        }
+        return false;
     }
 
 }

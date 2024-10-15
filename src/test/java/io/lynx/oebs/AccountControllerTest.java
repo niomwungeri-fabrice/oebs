@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lynx.oebs.configs.CustomUserDetailsService;
 import io.lynx.oebs.configs.JwtTokenProvider;
 import io.lynx.oebs.configs.SecurityConfig;
+import io.lynx.oebs.dtos.OTPVerificationRequest;
 import io.lynx.oebs.entities.Account;
 import io.lynx.oebs.repositories.AccountRepository;
 import io.lynx.oebs.services.AccountService;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")  // Uses application-test.properties for test environment
-@Import({TestConfig.class,SecurityConfig.class})  // Ensures SecurityConfig is used
+@Import({TestConfig.class, SecurityConfig.class})  // Ensures SecurityConfig is used
 public class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -59,12 +60,20 @@ public class AccountControllerTest {
         // Create a new Account entity and set all required fields
         Account account = new Account();
         account.setEmail("verifieduser@example.com");
-        account.setPassword( passwordEncoder.encode("password123")); // Encode the password
+        account.setPassword(passwordEncoder.encode("password123")); // Encode the password
         account.setEmailVerified(true); // Set is_verified to true
         account.setPhoneNumber("1234567890"); // Additional fields can be set here
 
         // Save the account directly with the repository
         accountRepository.save(account);
+
+        Account account2 = new Account();
+        account2.setEmail("unverifieduser@example.com");
+        account2.setPassword(passwordEncoder.encode("password123")); // Encode the password
+        account2.setPhoneNumber("1234567890"); // Additional fields can be set here
+        account2.setOtp("000000");
+        // Save the account directly with the repository
+        accountRepository.save(account2);
     }
 
     @Test
@@ -118,5 +127,25 @@ public class AccountControllerTest {
 //                .andExpect(status().isUnauthorized())
 //                .andExpect(jsonPath("$.message").value("Incorrect password."));
 //    }
+
+
+    @Test
+    public void verifyAccount_ShouldReturnCreated_WhenOTPIsCorrect() throws Exception {
+        OTPVerificationRequest otpRequest = new OTPVerificationRequest("unverifieduser@example.com", "000000");
+        mockMvc.perform(post("/api/accounts/verify")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(otpRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.message").value("success! account has been verified success, head to the app to continue."));
+    }
+
+    @Test
+    public void verifyAccount_ShouldReturnUnauthorized_WhenOTPIsIncorrect() throws Exception {
+        OTPVerificationRequest otpRequest = new OTPVerificationRequest("unverifieduser@example.com", "wrong_otp");
+        mockMvc.perform(post("/api/accounts/verify")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(otpRequest))).andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.data.message").value("failed! otp has expired or does not match."));
+    }
 
 }

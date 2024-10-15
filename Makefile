@@ -1,8 +1,11 @@
+-include .env
 # Define the Docker Compose command for convenience
 DCOMPOSE=docker-compose
 
 # Target to build and start the dev environment
-dev:
+load-env:
+	source .env
+dev: load-env
 	$(DCOMPOSE) down -v
 	$(DCOMPOSE) up --build
 
