@@ -50,7 +50,6 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             return jwtTokenProvider.generateToken(authentication);
         } catch (InternalServerException e) {
-
             throw new InternalServerException();
         }
     }
