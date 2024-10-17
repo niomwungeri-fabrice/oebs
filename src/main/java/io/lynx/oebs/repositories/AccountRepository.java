@@ -7,12 +7,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
-    // Find an account by email
     Optional<Account> findByEmail(String email);
 
-    // Check if an account exists by email
     boolean existsByEmail(String email);
 
-    // Check if an account exists by phone number
+    boolean existsByAccountId(UUID uuid);
+
     boolean existsByPhoneNumber(String phoneNumber);
 }

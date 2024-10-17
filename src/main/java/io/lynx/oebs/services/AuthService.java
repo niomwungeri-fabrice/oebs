@@ -3,6 +3,7 @@ package io.lynx.oebs.services;
 import io.lynx.oebs.configs.JwtTokenProvider;
 import io.lynx.oebs.dtos.LoginRequest;
 import io.lynx.oebs.entities.Account;
+import io.lynx.oebs.exceptions.InternalServerException;
 import io.lynx.oebs.exceptions.ResourceNotFoundException;
 import io.lynx.oebs.exceptions.ResourceUnAuthorizedException;
 import io.lynx.oebs.repositories.AccountRepository;
@@ -29,19 +30,28 @@ public class AuthService {
     }
 
     public String authenticateAndGenerateToken(LoginRequest loginRequest) {
-        Account account = accountRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("user", "email", loginRequest.getEmail()));
-
-        if (!account.isEmailVerified()) {
-            throw new ResourceUnAuthorizedException("account is not verified.");
+        try {
+            Account account = accountRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException("user", "email", loginRequest.getEmail()));
+            if (!account.isEmailVerified()) {
+                throw new ResourceUnAuthorizedException("account is not verified.");
+            }
+            return tokenGenerator(loginRequest);
+        } catch (BadCredentialsException ex) {
+            throw new ResourceUnAuthorizedException("incorrect email or password.");
+        } catch (InternalServerException e) {
+            throw new InternalServerException();
         }
+    }
+
+    public String tokenGenerator(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             return jwtTokenProvider.generateToken(authentication);
-        } catch (BadCredentialsException ex) {
-            log.error("error ");
-            throw new ResourceUnAuthorizedException("incorrect email or password.");
+        } catch (InternalServerException e) {
+
+            throw new InternalServerException();
         }
     }
 }

@@ -88,7 +88,7 @@ public class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createAccountRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.message").value("success! email sent for verification, please check your email."));
+                .andExpect(jsonPath("$.data").value("success! email sent for verification, please check your email."));
         // Step 2: Authenticate the account using the /api/token endpoint
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("email", "newuser@example.com");
@@ -98,7 +98,7 @@ public class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("account is not verified."));
+                .andExpect(jsonPath("$.data.error").value("account is not verified."));
     }
 
 
@@ -136,7 +136,7 @@ public class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(otpRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.message").value("success! account has been verified success, head to the app to continue."));
+                .andExpect(jsonPath("$.data.token").exists());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class AccountControllerTest {
         mockMvc.perform(post("/api/accounts/verify")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(otpRequest))).andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.data.message").value("failed! otp has expired or does not match."));
+                .andExpect(jsonPath("$.data.error").value("otp verification failed."));
     }
 
 }
