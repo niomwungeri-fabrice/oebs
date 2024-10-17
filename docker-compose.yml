@@ -19,7 +19,6 @@ services:
       - SHOW_SQL=${SHOW_SQL}
       - TOKEN_EXPIRATION=${TOKEN_EXPIRATION}
       - SENDGRID_KEY=${SENDGRID_KEY}
-      - SENDGRID_EMAIL_VERIFICATION_TEMPLATE=${SENDGRID_EMAIL_VERIFICATION_TEMPLATE}
       - SENDGRID_SENDER=${SENDGRID_SENDER}
     volumes:
       - .:/app  # Mount the project directory to /app in the container

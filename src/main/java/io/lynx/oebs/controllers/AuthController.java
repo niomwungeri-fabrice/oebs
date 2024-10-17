@@ -1,5 +1,6 @@
 package io.lynx.oebs.controllers;
 
+import io.lynx.oebs.constants.ErrorMessages;
 import io.lynx.oebs.dtos.GenericAPIResponse;
 import io.lynx.oebs.dtos.JwtTokenResponse;
 import io.lynx.oebs.dtos.LoginRequest;

@@ -2,6 +2,7 @@ package io.lynx.oebs.configs;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +34,12 @@ public class JwtTokenProvider {
 
     // Generate a JWT token for an authenticated user
     public String generateToken(Authentication authentication) {
-        String email = authentication.getName(); // Get the email from the authentication object
+        return getToken(authentication.getName());
+    }
+
+    public String getToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationTime);
-
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(now)
@@ -64,5 +67,15 @@ public class JwtTokenProvider {
             // Log the exception if needed (e.g., TokenExpiredException, MalformedJwtException)
             return false;
         }
+    }
+
+    public String generateTokenForUser(String email) {
+        // Create claims and generate token directly for the provided email
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
 }
