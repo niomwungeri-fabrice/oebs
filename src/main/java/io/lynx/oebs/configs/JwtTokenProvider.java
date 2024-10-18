@@ -2,9 +2,10 @@ package io.lynx.oebs.configs;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
 
@@ -24,6 +26,13 @@ public class JwtTokenProvider {
     private long expirationTime;
 
     private Key key;
+
+    private final CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    public JwtTokenProvider(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     // Initialize the key after the secret is injected
     @PostConstruct
@@ -64,18 +73,8 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            // Log the exception if needed (e.g., TokenExpiredException, MalformedJwtException)
+            log.error("error validating token -:{}", e.getMessage());
             return false;
         }
-    }
-
-    public String generateTokenForUser(String email) {
-        // Create claims and generate token directly for the provided email
-        return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
     }
 }

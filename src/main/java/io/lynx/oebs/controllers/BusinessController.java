@@ -1,13 +1,11 @@
 package io.lynx.oebs.controllers;
 
 
-import io.lynx.oebs.constants.ErrorMessages;
 import io.lynx.oebs.dtos.CreateBusinessRequest;
 import io.lynx.oebs.dtos.CustomPage;
 import io.lynx.oebs.dtos.GenericAPIResponse;
 import io.lynx.oebs.entities.Account;
 import io.lynx.oebs.entities.Business;
-import io.lynx.oebs.helpers.Helpers;
 import io.lynx.oebs.services.BusinessService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +33,7 @@ public class BusinessController {
 
     @PostMapping
     public ResponseEntity<?> createBusiness(@RequestBody CreateBusinessRequest businessRequest, @AuthenticationPrincipal Account account) {
-        log.info("logged in user: {}", Helpers.toJson(account));
-        Business business = businessService.createBusiness(businessRequest, account);
-        log.info("created business: {}", Helpers.toJson(business));
-        return new ResponseEntity<Object>(GenericAPIResponse.builder().data("success! business has been created").build(), HttpStatus.CREATED);
+        return new ResponseEntity<Object>(GenericAPIResponse.builder().data(businessService.createBusiness(businessRequest, account)).build(), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -62,4 +57,10 @@ public class BusinessController {
     public ResponseEntity<?> getBusinessesByOwner(@PathVariable UUID ownerId) {
         return new ResponseEntity<Object>(GenericAPIResponse.builder().data(businessService.getBusinessesByOwner(ownerId)).build(), HttpStatus.OK);
     }
+
+    // get business by id
+    // update business by id [name, address, ect..]
+    // add profile picture business id
+    // delete business by id
+
 }

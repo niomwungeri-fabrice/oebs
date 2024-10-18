@@ -2,7 +2,6 @@ package io.lynx.oebs.services;
 
 import io.lynx.oebs.configs.JwtTokenProvider;
 import io.lynx.oebs.dtos.CreateAccountRequest;
-import io.lynx.oebs.dtos.GenericAPIResponse;
 import io.lynx.oebs.entities.Account;
 import io.lynx.oebs.exceptions.InternalServerException;
 import io.lynx.oebs.exceptions.ResourceConflictException;
@@ -13,9 +12,6 @@ import io.lynx.oebs.services.mail.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
